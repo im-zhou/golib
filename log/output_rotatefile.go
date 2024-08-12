@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fatedier/golib/clock"
+	"github.com/im-zhou/golib/clock"
 )
 
 var defaultLogFileName = "default.log"

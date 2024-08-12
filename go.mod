@@ -1,4 +1,4 @@
-module github.com/fatedier/golib
+module github.com/im-zhou/golib
 
 go 1.21
 

@@ -81,7 +81,7 @@ linters-settings:
     sections:
     - standard
     - default
-    - prefix(github.com/fatedier/golib/)
+    - prefix(github.com/im-zhou/golib/)
   gosec:
     severity: "low"
     confidence: "low"

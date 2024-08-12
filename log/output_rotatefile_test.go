@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	testingclock "github.com/fatedier/golib/clock/testing"
+	testingclock "github.com/im-zhou/golib/clock/testing"
 )
 
 func TestRotateFileWriter_RotateDaily(t *testing.T) {

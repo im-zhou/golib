@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"testing"
 	"time"
 
@@ -55,4 +56,40 @@ func TestLogOffset(t *testing.T) {
 	wrapLog()
 
 	require.Contains(testBuffer.String(), "log/log_test.go:55")
+}
+
+func TestLogOutput(t *testing.T) {
+	InitLogger("trace")
+
+	LLogger.Infof("this is info")
+	LLogger.Warnf("this is warn")
+	LLogger.Errorf("this is error")
+	LLogger.Tracef("this is trace")
+	LLogger.Debugf("this is debug")
+}
+
+var LLogger *Logger
+
+func init() {
+	LLogger = New(
+		WithCaller(true),
+		AddCallerSkip(0),
+		WithLevel(InfoLevel),
+	)
+}
+
+func InitLogger(levelStr string) {
+	var options []Option
+
+	options = append(options,
+		WithOutput(NewConsoleWriter(ConsoleConfig{
+			Colorful: true,
+		}, os.Stdout)))
+
+	level, err := ParseLevel(levelStr)
+	if err != nil {
+		level = InfoLevel
+	}
+	options = append(options, WithLevel(level))
+	LLogger = LLogger.WithOptions(options...)
 }

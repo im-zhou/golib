@@ -1,10 +1,42 @@
 package log
 
 import (
+	"fmt"
 	"io"
 	"os"
+	"strings"
 	"time"
 )
+
+const (
+	Reset       = "\033[0m"
+	Red         = "\033[1;31m"
+	Green       = "\033[1;32m"
+	Yellow      = "\033[1;33m"
+	Blue        = "\033[1;34m"
+	Magenta     = "\033[1;35m"
+	Cyan        = "\033[1;36m"
+	White       = "\033[1;37m"
+	BlueBold    = "\033[34;1m"
+	MagentaBold = "\033[35;1m"
+	RedBold     = "\033[31;1m"
+	YellowBold  = "\033[33;1m"
+)
+
+func myFormat(pre, levelColor, text, reset string) string {
+	timeHead := text[:23]
+	levelBox := text[24:27]
+	index := strings.Index(text[28:], "]")
+	// 使用第一个 "]" 位置切割字符串
+	caller := text[28:][:index+1]
+	msg := strings.TrimSpace(text[28:][index+1:])
+	levelColor = "\033[" + levelColor + "m"
+	return fmt.Sprintf("%s%s%s %s%s%s %s%s%s %s%s%s\n",
+		Cyan, timeHead, Reset,
+		levelColor, levelBox, Reset,
+		Green, caller, Reset,
+		levelColor, msg, Reset)
+}
 
 // brush is a color join function
 type brush func(string) string
@@ -14,7 +46,7 @@ func newBrush(color string) brush {
 	pre := "\033["
 	reset := "\033[0m"
 	return func(text string) string {
-		return pre + color + "m" + text + reset
+		return myFormat(pre, color, text, reset)
 	}
 }
 
@@ -23,7 +55,7 @@ func emptyBrush(text string) string {
 }
 
 var colors = []brush{
-	emptyBrush,       // Trace              No Color
+	newBrush("0"),    // Trace              No Color
 	newBrush("1;36"), // Debug              Light Cyan
 	newBrush("1;34"), // Info 				Blue
 	newBrush("1;33"), // Warn               Yellow
